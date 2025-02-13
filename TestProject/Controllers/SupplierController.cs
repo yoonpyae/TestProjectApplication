@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using TestProject.Models;
 
 namespace TestProject.Controllers
@@ -18,8 +17,8 @@ namespace TestProject.Controllers
         [EndpointSummary("Create Supplier")]
         public IActionResult PostSupplier([FromForm] Supplier supplier)
         {
-            _context.Suppliers.Add(supplier);
-            _context.SaveChanges();
+            _ = _context.Suppliers.Add(supplier);
+            _ = _context.SaveChanges();
             return Ok(new { message = "Supplier created successfully" });
         }
 
@@ -27,7 +26,7 @@ namespace TestProject.Controllers
         [EndpointSummary("Get all suppliers")]
         public IActionResult GetSuppliers()
         {
-            var suppliers = _context.Suppliers.ToList();
+            List<Supplier> suppliers = _context.Suppliers.ToList();
             return Ok(suppliers);
         }
 
@@ -35,22 +34,21 @@ namespace TestProject.Controllers
         [EndpointSummary("Get By Supplier Id")]
         public IActionResult GetSupplierById(string id)
         {
-            var supplier = _context.Suppliers.SingleOrDefault(x => x.SupplierId == id);
-            if (supplier == null)
-            {
-                return BadRequest("Supplier Not Found");
-            }
-            return Ok(supplier);
+            Supplier? supplier = _context.Suppliers.SingleOrDefault(x => x.SupplierId == id);
+            return supplier == null ? BadRequest("Supplier Not Found") : Ok(supplier);
         }
 
         [HttpDelete("{id}")]
         [EndpointSummary("Delete Supplier")]
         public IActionResult DeleteSupplier(string id)
         {
-            var supplier = _context.Suppliers.Find(id);
+            Supplier? supplier = _context.Suppliers.Find(id);
             if (supplier != null)
-                _context.Suppliers.Remove(supplier);
-            _context.SaveChanges();
+            {
+                _ = _context.Suppliers.Remove(supplier);
+            }
+
+            _ = _context.SaveChanges();
             return Ok(new { message = "Supplier deleted successfully" });
         }
 
@@ -58,7 +56,7 @@ namespace TestProject.Controllers
         [EndpointSummary("Update Supplier")]
         public IActionResult UpdateSupplier(string id, [FromForm] Supplier supplier)
         {
-            var supplierToUpdate = _context.Suppliers.Find(id);
+            Supplier? supplierToUpdate = _context.Suppliers.Find(id);
             if (supplierToUpdate == null)
             {
                 return BadRequest("Supplier Not Found");
@@ -66,7 +64,7 @@ namespace TestProject.Controllers
             supplierToUpdate.SupplierName = supplier.SupplierName;
             supplierToUpdate.Address = supplier.Address;
             supplierToUpdate.PhoneNo = supplier.PhoneNo;
-            _context.SaveChanges();
+            _ = _context.SaveChanges();
             return Ok(new { message = "Supplier updated successfully" });
         }
     }

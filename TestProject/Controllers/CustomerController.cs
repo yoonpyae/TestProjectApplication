@@ -1,7 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using TestProject.ClassModels;
+﻿using Microsoft.AspNetCore.Mvc;
 using TestProject.Models;
 
 namespace TestProject.Controllers
@@ -22,14 +19,14 @@ namespace TestProject.Controllers
 
         public IActionResult GetCustomers()
         {
-            var customers = _context.Customers.ToList();
+            List<Customer> customers = _context.Customers.ToList();
             return Ok(customers);
         }
 
         [HttpPost]
         public IActionResult PostCustomers([FromForm] Customer customer)
         {
-            _context.Customers.Add(customer);
+            _ = _context.Customers.Add(customer);
             return Ok(_context.SaveChanges());
         }
 
@@ -37,22 +34,20 @@ namespace TestProject.Controllers
         [EndpointSummary("Get By Customer Id")]
         public IActionResult GetCustomerById(string id)
         {
-            var customer = _context.Customers.SingleOrDefault(y => y.CustomerId == id);
-            if (customer == null)
-            {
-                return BadRequest("Customer Not Found");
-            }
-            return Ok(customer);
+            Customer? customer = _context.Customers.SingleOrDefault(y => y.CustomerId == id);
+            return customer == null ? BadRequest("Customer Not Found") : Ok(customer);
         }
 
         [HttpDelete("{id}")]
         [EndpointSummary("Delete Customer")]
         public IActionResult DeleteCustomer(string id)
         {
-            var customer = _context.Customers.Find(id);
+            Customer? customer = _context.Customers.Find(id);
 
             if (customer != null)
-                _context.Customers.Remove(customer);
+            {
+                _ = _context.Customers.Remove(customer);
+            }
 
             return Ok(_context.SaveChanges());
         }
@@ -62,7 +57,7 @@ namespace TestProject.Controllers
         [EndpointSummary("Update Customer")]
         public IActionResult UpdateCustomer(string id, string newCustomer)
         {
-            var customer = _context.Customers.FirstOrDefault(x => x.CustomerId == id);
+            Customer? customer = _context.Customers.FirstOrDefault(x => x.CustomerId == id);
 
             if (customer is not null)
             {
@@ -81,7 +76,8 @@ namespace TestProject.Controllers
                             on cus.CustomerId equals order.CustomerId
                             join product in _context.Products
                             on order.ProductId equals product.ProductId
-                            select new  {
+                            select new
+                            {
                                 orderId = order.OrderId,
                                 customerName = cus.CustomerName,
                                 productName = product.ProductName,
@@ -96,7 +92,7 @@ namespace TestProject.Controllers
         [EndpointSummary("Get total orders by customer")]
         public IActionResult GetTotalOrdersByCustomer(string customerId)
         {
-            var totalOrders = _context.Orders.Count(o => o.CustomerId == customerId);
+            int totalOrders = _context.Orders.Count(o => o.CustomerId == customerId);
             return Ok(totalOrders);
         }
 
@@ -104,7 +100,7 @@ namespace TestProject.Controllers
         [EndpointSummary("Get total amount by customer")]
         public IActionResult GetTotalAmountByCustomer(string customerId)
         {
-            var totalAmount = _context.Orders.Where(o => o.CustomerId == customerId).Sum(o => o.TotalAmount);
+            double? totalAmount = _context.Orders.Where(o => o.CustomerId == customerId).Sum(o => o.TotalAmount);
             return Ok(totalAmount);
         }
     }

@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 
 namespace TestProject.Models;
 
@@ -30,100 +28,102 @@ public partial class AppDbContext : DbContext
     public virtual DbSet<ViPurchaseProcess> ViPurchaseProcesses { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        => optionsBuilder.UseSqlServer("Server=.;Database=TestingProject;User ID=sa;Password=123;TrustServerCertificate=True;");
+    {
+        _ = optionsBuilder.UseSqlServer("Server=.;Database=TestingProject;User ID=sa;Password=123;TrustServerCertificate=True;");
+    }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.Entity<Customer>(entity =>
+        _ = modelBuilder.Entity<Customer>(entity =>
         {
-            entity.ToTable("Customer");
+            _ = entity.ToTable("Customer");
 
-            entity.Property(e => e.CustomerId)
+            _ = entity.Property(e => e.CustomerId)
                 .HasMaxLength(50)
                 .HasColumnName("CustomerID");
-            entity.Property(e => e.CustomerName).HasMaxLength(50);
-            entity.Property(e => e.Email).HasMaxLength(50);
-            entity.Property(e => e.Phone).HasMaxLength(50);
+            _ = entity.Property(e => e.CustomerName).HasMaxLength(50);
+            _ = entity.Property(e => e.Email).HasMaxLength(50);
+            _ = entity.Property(e => e.Phone).HasMaxLength(50);
         });
 
-        modelBuilder.Entity<Order>(entity =>
+        _ = modelBuilder.Entity<Order>(entity =>
         {
-            entity.Property(e => e.OrderId)
+            _ = entity.Property(e => e.OrderId)
                 .HasMaxLength(50)
                 .HasColumnName("OrderID");
-            entity.Property(e => e.CustomerId)
+            _ = entity.Property(e => e.CustomerId)
                 .HasMaxLength(50)
                 .HasColumnName("CustomerID");
-            entity.Property(e => e.ProductId)
+            _ = entity.Property(e => e.ProductId)
                 .HasMaxLength(50)
                 .HasColumnName("ProductID");
         });
 
-        modelBuilder.Entity<Product>(entity =>
+        _ = modelBuilder.Entity<Product>(entity =>
         {
-            entity.ToTable("Product");
+            _ = entity.ToTable("Product");
 
-            entity.Property(e => e.ProductId)
+            _ = entity.Property(e => e.ProductId)
                 .HasMaxLength(50)
                 .HasColumnName("ProductID");
-            entity.Property(e => e.CustomerId)
+            _ = entity.Property(e => e.CustomerId)
                 .HasMaxLength(50)
                 .HasColumnName("CustomerID");
-            entity.Property(e => e.Price).HasMaxLength(50);
-            entity.Property(e => e.ProductName).HasMaxLength(50);
+            _ = entity.Property(e => e.Price).HasMaxLength(50);
+            _ = entity.Property(e => e.ProductName).HasMaxLength(50);
         });
 
-        modelBuilder.Entity<Purchase>(entity =>
+        _ = modelBuilder.Entity<Purchase>(entity =>
         {
-            entity.ToTable("Purchase");
+            _ = entity.ToTable("Purchase");
 
-            entity.Property(e => e.PurchaseId)
+            _ = entity.Property(e => e.PurchaseId)
                 .HasMaxLength(50)
                 .HasColumnName("PurchaseID");
         });
 
-        modelBuilder.Entity<PurchaseDetail>(entity =>
+        _ = modelBuilder.Entity<PurchaseDetail>(entity =>
         {
-            entity.ToTable("PurchaseDetail");
+            _ = entity.ToTable("PurchaseDetail");
 
-            entity.Property(e => e.PurchaseDetailId)
+            _ = entity.Property(e => e.PurchaseDetailId)
                 .HasMaxLength(50)
                 .HasColumnName("PurchaseDetailID");
-            entity.Property(e => e.ProductId)
+            _ = entity.Property(e => e.ProductId)
                 .HasMaxLength(50)
                 .HasColumnName("ProductID");
-            entity.Property(e => e.PurchaseId)
+            _ = entity.Property(e => e.PurchaseId)
                 .HasMaxLength(50)
                 .HasColumnName("PurchaseID");
         });
 
-        modelBuilder.Entity<Supplier>(entity =>
+        _ = modelBuilder.Entity<Supplier>(entity =>
         {
-            entity.ToTable("Supplier");
+            _ = entity.ToTable("Supplier");
 
-            entity.Property(e => e.SupplierId)
+            _ = entity.Property(e => e.SupplierId)
                 .HasMaxLength(50)
                 .HasColumnName("SupplierID");
-            entity.Property(e => e.Address).HasMaxLength(50);
-            entity.Property(e => e.PhoneNo).HasMaxLength(50);
-            entity.Property(e => e.SupplierName).HasMaxLength(50);
+            _ = entity.Property(e => e.Address).HasMaxLength(50);
+            _ = entity.Property(e => e.PhoneNo).HasMaxLength(50);
+            _ = entity.Property(e => e.SupplierName).HasMaxLength(50);
         });
 
-        modelBuilder.Entity<ViPurchaseProcess>(entity =>
+        _ = modelBuilder.Entity<ViPurchaseProcess>(entity =>
         {
-            entity
+            _ = entity
                 .HasNoKey()
                 .ToView("ViPurchaseProcess");
 
-            entity.Property(e => e.CustomerName).HasMaxLength(50);
-            entity.Property(e => e.ProductId)
+            _ = entity.Property(e => e.CustomerName).HasMaxLength(50);
+            _ = entity.Property(e => e.ProductId)
                 .HasMaxLength(50)
                 .HasColumnName("ProductID");
-            entity.Property(e => e.ProductName).HasMaxLength(50);
-            entity.Property(e => e.PurchaseDetailId)
+            _ = entity.Property(e => e.ProductName).HasMaxLength(50);
+            _ = entity.Property(e => e.PurchaseDetailId)
                 .HasMaxLength(50)
                 .HasColumnName("PurchaseDetailID");
-            entity.Property(e => e.PurchaseId)
+            _ = entity.Property(e => e.PurchaseId)
                 .HasMaxLength(50)
                 .HasColumnName("PurchaseID");
         });

@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using TestProject.Models;
 
 namespace TestProject.Controllers
@@ -18,7 +17,7 @@ namespace TestProject.Controllers
         [EndpointSummary("Create Purchase")]
         public IActionResult PostPurchase([FromForm] Purchase purchase)
         {
-            _context.Purchases.Add(purchase);
+            _ = _context.Purchases.Add(purchase);
             return Ok(_context.SaveChanges());
         }
 
@@ -26,7 +25,7 @@ namespace TestProject.Controllers
         [EndpointSummary("Get all purchases")]
         public IActionResult GetPurchases()
         {
-            var purchases = _context.Purchases.ToList();
+            List<Purchase> purchases = _context.Purchases.ToList();
             return Ok(purchases);
         }
 
@@ -34,26 +33,22 @@ namespace TestProject.Controllers
         [EndpointSummary("Get By Purchase Id")]
         public IActionResult GetPurchaseById(string id)
         {
-            var purchase = _context.Purchases.SingleOrDefault(x => x.PurchaseId == id);
-            if (purchase == null)
-            {
-                return BadRequest("Purchase Not Found");
-            }
-            return Ok(purchase);
+            Purchase? purchase = _context.Purchases.SingleOrDefault(x => x.PurchaseId == id);
+            return purchase == null ? BadRequest("Purchase Not Found") : Ok(purchase);
         }
 
         [HttpDelete("{id}")]
         [EndpointSummary("Delete Purchase")]
         public IActionResult DeletePurchase(string id)
         {
-            var purchase = _context.Purchases.Find(id);
+            Purchase? purchase = _context.Purchases.Find(id);
 
             if (purchase == null)
             {
                 return BadRequest("Purchase Not Found");
             }
 
-            var purchasedetails = _context.PurchaseDetails.Where(x => x.PurchaseId == id).ToList();
+            List<PurchaseDetail> purchasedetails = _context.PurchaseDetails.Where(x => x.PurchaseId == id).ToList();
 
             if (purchasedetails.Any())
             {
@@ -63,8 +58,8 @@ namespace TestProject.Controllers
             {
                 if (purchase != null)
                 {
-                    _context.Purchases.Remove(purchase);
-                    _context.SaveChanges();
+                    _ = _context.Purchases.Remove(purchase);
+                    _ = _context.SaveChanges();
                     return Ok(new { message = "Purchase deleted successfully" });
                 }
                 return BadRequest("Purchase Not Found");
@@ -75,13 +70,13 @@ namespace TestProject.Controllers
         [EndpointSummary("Update Purchase")]
         public IActionResult UpdatePurchase(string id, [FromForm] Purchase purchases)
         {
-            var purchase = _context.Purchases.Find(id);
+            Purchase? purchase = _context.Purchases.Find(id);
             if (purchase != null)
             {
                 purchase.PurchaseId = purchases.PurchaseId;
                 purchase.PurchaseDate = purchases.PurchaseDate;
-                _context.Purchases.Update(purchase);
-                _context.SaveChanges();
+                _ = _context.Purchases.Update(purchase);
+                _ = _context.SaveChanges();
                 return Ok(new { message = "Purchase updated successfully" });
             }
             return BadRequest("Purchase Not Found");
